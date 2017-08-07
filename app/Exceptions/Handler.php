@@ -3,8 +3,12 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Http\Response;
 use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\Debug\Exception\FlattenException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -61,5 +65,27 @@ class Handler extends ExceptionHandler
         }
 
         return redirect()->guest(route('login'));
+    }
+
+    /**
+     * Create a Symfony response for the given exception.
+     *
+     * @param  \Exception  $e
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function convertExceptionToResponse(Exception $e)
+    {
+        $e = FlattenException::create($e);
+
+        // Disabled HTML exception renderization if debug is false
+        if ( ! config('app.debug') ) {
+            $message = Response::$statusTexts[$e->getStatusCode()];
+
+            return response()->json($message, $e->getStatusCode());
+        }
+
+        $handler = new SymfonyExceptionHandler(config('app.debug', false));
+
+        return SymfonyResponse::create($handler->getHtml($e), $e->getStatusCode(), $e->getHeaders());
     }
 }

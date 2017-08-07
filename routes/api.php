@@ -1,30 +1,25 @@
 <?php
 
-use Illuminate\Http\Request;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 Route::group(['prefix' => 'v1'], function () {
 
-    Route::group(['prefix' => 'users'], function () {
-        Route::get('', ['uses' => 'UserController@index']);
-        Route::post('', ['uses' => 'UserController@store']);
-        Route::get('/{id}', ['uses' => 'UserController@show']);
-        Route::put('/{id}', ['uses' => 'UserController@update']);
-        Route::delete('/{id}', ['uses' => 'UserController@destroy']);
+    // Authentication
+    Route::group(['prefix' => 'auth'], function () {
+        Route::post('', 'JWTAuth\AuthenticationController@authenticate');
+        Route::put('', 'JWTAuth\AuthenticationController@refreshToken');
+        Route::delete('', 'JWTAuth\AuthenticationController@unAuthenticate');
+    });
+
+    // JWT Middleware
+    Route::group(['middleware' => 'jwt.auth'], function () {
+
+        // Users
+        Route::group(['prefix' => 'users'], function () {
+            Route::get('', 'UserController@index');
+            Route::post('', 'UserController@store');
+            Route::get('/{id}', 'UserController@show');
+            Route::put('/{id}', 'UserController@update');
+            Route::delete('/{id}', 'UserController@destroy');
+        });
     });
 });
 

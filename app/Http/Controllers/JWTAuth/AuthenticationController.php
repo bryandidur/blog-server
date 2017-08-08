@@ -28,10 +28,7 @@ class AuthenticationController extends Controller
         }
 
         if ( ! $token = JWTAuth::attempt($request->only([$this->username(), 'password'])) ) {
-            // Increments authentication attempts
-            $this->incrementLoginAttempts($request);
-
-            return response()->json(['message' => trans('auth.failed')], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendFailedAuthenticationResponse($request);
         }
 
         return $this->sendAuthenticationResponse($request, $token);
@@ -82,6 +79,7 @@ class AuthenticationController extends Controller
      */
     private function sendAuthenticationResponse(Request $request, $token)
     {
+        // Clear the number authentication attempts, seting its to zero
         $this->clearLoginAttempts($request);
 
         $data = [
@@ -95,10 +93,25 @@ class AuthenticationController extends Controller
     }
 
     /**
+     * Get the failed authentication response instance.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function sendFailedAuthenticationResponse(Request $request)
+    {
+        // Increment the number of authentication attempts. Of course, when this
+        // user surpasses their maximum number of attempts they will get locked out.
+        $this->incrementLoginAttempts($request);
+
+        return response()->json(['message' => trans('auth.failed')], Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
      * Sends a lockout response to the client.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\JsonResponse
      */
     protected function sendLockoutResponse(Request $request)
     {

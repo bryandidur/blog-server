@@ -3,10 +3,13 @@
 Route::group(['prefix' => 'v1'], function () {
 
     // Authentication
-    Route::group(['prefix' => 'auth'], function () {
-        Route::post('', 'JWTAuth\AuthenticationController@authenticate');
-        Route::put('', 'JWTAuth\AuthenticationController@refreshToken');
-        Route::delete('', 'JWTAuth\AuthenticationController@unAuthenticate');
+    Route::group(['prefix' => 'auth', 'namespace' => 'JWTAuth'], function () {
+        Route::post('', 'AuthenticationController@authenticate');
+        Route::put('', 'AuthenticationController@refreshToken');
+        Route::delete('', 'AuthenticationController@unAuthenticate');
+
+        Route::post('reset', 'ForgotPasswordController@sendResetLinkEmail');
+        Route::put('reset', 'ResetPasswordController@reset');
     });
 
     // JWT Middleware

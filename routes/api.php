@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => 'v1'], function () {
+Route::group(['prefix' => 'v1', 'middleware' => 'always.json'], function () {
 
     // Authentication
     Route::group(['prefix' => 'auth', 'namespace' => 'JWTAuth'], function () {

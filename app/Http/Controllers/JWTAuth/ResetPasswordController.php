@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\JWTAuth;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
+use App\Http\Requests\Auth\AuthenticationRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Controllers\Controller;
 
 class ResetPasswordController extends Controller
@@ -14,11 +16,11 @@ class ResetPasswordController extends Controller
     /**
      * Reset the given user's password.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\Auth\ResetPasswordRequest  $request
      * @param  App\Http\Controllers\JWTAuth\AuthenticationController $authController
      * @return \Illuminate\Http\JsonResponse
      */
-    public function reset(Request $request, AuthenticationController $authController)
+    public function reset(ResetPasswordRequest $request, AuthenticationRequest $authRequest, AuthenticationController $authController)
     {
         // Here we will attempt to reset the user's password. If it is successful we
         // will update the password on an actual user model and persist it to the
@@ -31,7 +33,7 @@ class ResetPasswordController extends Controller
         // the application's home authenticated view. If there is an error we can
         // redirect them back to where they came from with their error message.
         if ( $response == Password::PASSWORD_RESET ) {
-            return $this->sendResetResponse($request, $response, $authController);
+            return $this->sendResetResponse($authRequest, $response, $authController);
         }
 
         return $this->sendResetFailedResponse($request, $response);
@@ -62,7 +64,7 @@ class ResetPasswordController extends Controller
      */
     protected function sendResetResponse(Request $request, $response, $authController)
     {
-        $authData = $this->authController->authenticate($request)->getContent();
+        $authData = $authController->authenticate($request)->getContent();
 
         $data = array_merge(json_decode($authData, true), ['status' => trans($response)]);
 

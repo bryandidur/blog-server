@@ -5,6 +5,7 @@ namespace App\Http\Controllers\JWTAuth;
 use JWTAuth;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Http\Requests\Auth\AuthenticationRequest;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use App\Http\Controllers\Controller;
 
@@ -15,10 +16,10 @@ class AuthenticationController extends Controller
     /**
      * Handle an authentication token request.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  App\Http\Requests\Auth\AuthenticationRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function authenticate(Request $request)
+    public function authenticate(AuthenticationRequest $request)
     {
         // Checks if has too many authentication attempts, by username and client IP address
         if ($this->hasTooManyLoginAttempts($request)) {

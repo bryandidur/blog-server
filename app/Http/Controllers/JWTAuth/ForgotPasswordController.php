@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Password;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Controllers\Controller;
 
 class ForgotPasswordController extends Controller
@@ -13,10 +14,10 @@ class ForgotPasswordController extends Controller
     /**
      * Send a reset link to the given user.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\Auth\ForgotPasswordRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function sendResetLinkEmail(Request $request)
+    public function sendResetLinkEmail(ForgotPasswordRequest $request)
     {
         // Attach password reset route to the user model
         User::$passwordResetRoute = $request->get('route');

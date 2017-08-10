@@ -48,3 +48,18 @@ $factory->define(App\Category::class, function (Faker\Generator $faker) {
         'description' => $faker->sentence,
     ];
 });
+
+// Articles factory
+$factory->define(App\Article::class, function (Faker\Generator $faker) {
+    $title = $faker->words( 8, true );
+    $users = App\User::all()->pluck('id')->toArray();
+
+    return [
+        'user_id' => $users[array_rand($users)],
+        'slug' => str_slug($title),
+        'title' => ucwords($title),
+        'description' => $faker->sentence,
+        'content' => $faker->paragraphs(20, true),
+        'status' => rand(0, 1),
+    ];
+});

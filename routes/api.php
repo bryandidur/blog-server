@@ -41,6 +41,19 @@ Route::group(['prefix' => 'v1', 'middleware' => 'always.json'], function () {
             Route::put('/{id}', 'CategoryController@update');
             Route::delete('/{id}', 'CategoryController@destroy');
         });
+
+        // Articles
+        Route::group(['prefix' => 'articles'], function () {
+            Route::get('', 'ArticleController@index');
+
+            Route::get('/create', 'ArticleController@create');
+            Route::post('/create', 'ArticleController@store');
+
+            Route::get('/{id}', 'ArticleController@edit');
+            Route::put('/{id}', 'ArticleController@update');
+
+            Route::delete('/{id}', 'ArticleController@destroy');
+        });
     });
 });
 

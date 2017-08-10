@@ -27,4 +27,14 @@ class Tag extends Model
     {
         return $this->belongsTo(\App\User::class);
     }
+
+    /**
+     * Many-to-many articles tags relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function articles()
+    {
+        return $this->belongsToMany(\App\Article::class, 'articles_tags')->withTimestamps();
+    }
 }

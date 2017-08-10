@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class Article extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -14,12 +14,14 @@ class Category extends Model
     protected $fillable = [
         'user_id',
         'slug',
-        'name',
+        'title',
         'description',
+        'content',
+        'status',
     ];
 
     /**
-     * Has-many user categories relationship.
+     * Has-many user articles relationship.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -29,12 +31,22 @@ class Category extends Model
     }
 
     /**
+     * Many-to-many articles tags relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function tags()
+    {
+        return $this->belongsToMany(\App\Tag::class, 'articles_tags')->withTimestamps();
+    }
+
+    /**
      * Many-to-many articles categories relationship.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function articles()
+    public function categories()
     {
-        return $this->belongsToMany(\App\Article::class, 'articles_categories')->withTimestamps();
+        return $this->belongsToMany(\App\Category::class, 'articles_categories')->withTimestamps();
     }
 }

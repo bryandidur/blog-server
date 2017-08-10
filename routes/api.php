@@ -23,6 +23,15 @@ Route::group(['prefix' => 'v1', 'middleware' => 'always.json'], function () {
             Route::put('/{id}', 'UserController@update');
             Route::delete('/{id}', 'UserController@destroy');
         });
+
+        // Tags
+        Route::group(['prefix' => 'tags'], function () {
+            Route::get('', 'TagController@index');
+            Route::post('', 'TagController@store');
+            Route::get('/{id}', 'TagController@show');
+            Route::put('/{id}', 'TagController@update');
+            Route::delete('/{id}', 'TagController@destroy');
+        });
     });
 });
 

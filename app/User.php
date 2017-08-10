@@ -12,6 +12,7 @@ class User extends Authenticatable
 
     /**
      * Route for password reset.
+     *
      * @var string
      */
     public static $passwordResetRoute;
@@ -22,7 +23,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password',
     ];
 
     /**
@@ -31,7 +34,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
@@ -45,5 +49,15 @@ class User extends Authenticatable
         $link = str_replace('{token}', $token, self::$passwordResetRoute);
 
         $this->notify(new ResetPasswordNotification($link));
+    }
+
+    /**
+     * Has-many user tags relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function tags()
+    {
+        return $this->hasMany(\App\Tag::class);
     }
 }

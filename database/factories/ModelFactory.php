@@ -11,7 +11,7 @@
 |
 */
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+// Users factory
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     static $password;
 
@@ -20,5 +20,18 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
+    ];
+});
+
+// Tags factory
+$factory->define(App\Tag::class, function (Faker\Generator $faker) {
+    $name = $faker->unique()->word;
+    $users = App\User::all()->pluck('id')->toArray();
+
+    return [
+        'user_id' => array_rand($users),
+        'slug' => str_slug( $name ),
+        'name' => ucfirst( $name ),
+        'description' => $faker->sentence,
     ];
 });

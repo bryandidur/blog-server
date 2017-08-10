@@ -32,6 +32,15 @@ Route::group(['prefix' => 'v1', 'middleware' => 'always.json'], function () {
             Route::put('/{id}', 'TagController@update');
             Route::delete('/{id}', 'TagController@destroy');
         });
+
+        // Categories
+        Route::group(['prefix' => 'categories'], function () {
+            Route::get('', 'CategoryController@index');
+            Route::post('', 'CategoryController@store');
+            Route::get('/{id}', 'CategoryController@show');
+            Route::put('/{id}', 'CategoryController@update');
+            Route::delete('/{id}', 'CategoryController@destroy');
+        });
     });
 });
 

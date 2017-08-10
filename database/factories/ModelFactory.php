@@ -35,3 +35,16 @@ $factory->define(App\Tag::class, function (Faker\Generator $faker) {
         'description' => $faker->sentence,
     ];
 });
+
+// Categories factory
+$factory->define(App\Category::class, function (Faker\Generator $faker) {
+    $name = $faker->unique()->word;
+    $users = App\User::all()->pluck('id')->toArray();
+
+    return [
+        'user_id' => $users[array_rand($users)],
+        'slug' => str_slug($name),
+        'name' => ucfirst($name),
+        'description' => $faker->sentence,
+    ];
+});

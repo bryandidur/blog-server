@@ -60,4 +60,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Tag::class);
     }
+
+    /**
+     * Has-many user categories relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function categories()
+    {
+        return $this->hasMany(\App\Category::class);
+    }
 }

@@ -2,86 +2,66 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Repositories\Contracts\UserRepositoryInterface;
 
 class UserController extends Controller
 {
     /**
-     * App\User
+     * UserRepositoryInterface
      *
      * @var object
      */
-    private $userModel;
+    private $userRepository;
 
     /**
      * Create a new controller instance.
      *
-     * @param App\User $user
+     * @param UserRepositoryInterface $userRepository
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(UserRepositoryInterface $userRepository)
     {
-        $this->userModel = $user;
+        $this->userRepository = $userRepository;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        $users = $this->userModel->orderBy('id', 'DESC')->get();
-        return response($users, 200);
-    }
+        $users = $this->userRepository->all()->sortByDesc('id');
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response()->json($users, Response::HTTP_OK);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-        $data['password'] = bcrypt($data['password']);
+        $user = $this->userRepository->create($request->all());
 
-        $user = $this->userModel->create($data);
-        return response($user, 201);
+        return response($user, Response::HTTP_CREATED);
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
-        $user = $this->userModel->findOrFail($id);
-        return response($user, 200);
-    }
+        $user = $this->userRepository->find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return response()->json($user, Response::HTTP_OK);
     }
 
     /**
@@ -89,31 +69,29 @@ class UserController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
     {
-        $user = $this->userModel->findOrFail($id);
-        $data = $request->all();
-        $data['password'] = isset($data['password']) ? bcrypt($data['password']) : $user->password;
+        $user = $this->userRepository->find($id);
 
-        $user->fill($data);
-        $user->save();
+        $this->userRepository->update($user, $request->all());
 
-        return response($user, 200);
+        return response()->json($user, Response::HTTP_OK);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
-        $user = $this->userModel->findOrFail($id);
+        $user = $this->userRepository->find($id);
 
-        $user->delete();
-        return response(null, 200);
+        $userRepository->delete($user);
+
+        return response()->json(null, Response::HTTP_OK);
     }
 }

@@ -6,25 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Requests\ArticleRequest;
 use App\Repositories\Contracts\ArticleRepositoryInterface;
-use App\Repositories\Contracts\TagRepositoryInterface;
-use App\Repositories\Contracts\CategoryRepositoryInterface;
 
 class ArticleController extends Controller
 {
-    /**
-     * TagRepositoryInterface
-     *
-     * @var object
-     */
-    private $tagRepository;
-
-    /**
-     * CategoryRepositoryInterface
-     *
-     * @var object
-     */
-    private $categoryRepository;
-
     /**
      * ArticleRepositoryInterface
      *
@@ -35,19 +19,11 @@ class ArticleController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param TagRepositoryInterface $tagRepository
-     * @param CategoryRepositoryInterface $categoryRepository
      * @param ArticleRepositoryInterface $articleRepository
      * @return void
      */
-    public function __construct(
-        TagRepositoryInterface $tagRepository,
-        CategoryRepositoryInterface $categoryRepository,
-        ArticleRepositoryInterface $articleRepository
-    )
+    public function __construct(ArticleRepositoryInterface $articleRepository)
     {
-        $this->tagRepository = $tagRepository;
-        $this->categoryRepository = $categoryRepository;
         $this->articleRepository = $articleRepository;
     }
 
@@ -61,19 +37,6 @@ class ArticleController extends Controller
         $articles = $this->articleRepository->all()->sortByDesc('id');
 
         return response()->json($articles, Response::HTTP_OK);
-    }
-
-    /**
-     * Show data for creating a new article.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function create()
-    {
-        $tags = $this->tagRepository->all()->sortByDesc('id');
-        $categories = $this->categoryRepository->all()->sortByDesc('id');
-
-        return response()->json(compact('tags', 'categories'), Response::HTTP_OK);
     }
 
     /**
@@ -97,23 +60,9 @@ class ArticleController extends Controller
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show data for editing the specified article.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function edit($id)
-    {
         $article = $this->articleRepository->findWith($id, ['tags', 'categories']);
 
-        $tags = $this->tagRepository->all()->sortByDesc('id');
-        $categories = $this->categoryRepository->all()->sortByDesc('id');
-
-        return response()->json(compact('article', 'tags', 'categories'), Response::HTTP_OK);
+        return response()->json($article, Response::HTTP_OK);
     }
 
     /**

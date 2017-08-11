@@ -59,12 +59,12 @@ class FileController extends Controller
     }
 
     /**
-     * Show the form for editing the specified file.
+     * Display the specified file.
      *
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function edit($id)
+    public function show($id)
     {
         $file = $this->fileRepository->find($id);
         $file->url = Storage::disk($file->disk)->url($file->path);

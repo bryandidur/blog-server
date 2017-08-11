@@ -29,7 +29,7 @@ $factory->define(App\Tag::class, function (Faker\Generator $faker) {
     $users = App\User::all()->pluck('id')->toArray();
 
     return [
-        'user_id' => array_rand($users),
+        'user_id' => $users[array_rand($users)],
         'slug' => str_slug( $name ),
         'name' => ucfirst( $name ),
         'description' => $faker->sentence,

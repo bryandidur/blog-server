@@ -80,4 +80,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Article::class);
     }
+
+    /**
+     * Has-many user articles relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function files()
+    {
+        return $this->hasMany(\App\File::class);
+    }
 }

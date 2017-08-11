@@ -54,6 +54,16 @@ Route::group(['prefix' => 'v1', 'middleware' => 'always.json'], function () {
 
             Route::delete('/{id}', 'ArticleController@destroy');
         });
+
+        // Files
+        Route::group(['prefix' => 'files'], function () {
+            Route::get('', 'FileController@index');
+            Route::post('', 'FileController@store')->name('files.store');
+            Route::get('/{id}', 'FileController@edit');
+            Route::put('/{id}', 'FileController@update')->name('files.update');
+            Route::delete('/{id}', 'FileController@destroy');
+            Route::delete('', 'FileController@bulkDestroy')->name('files.bulkDestroy');
+        });
     });
 });
 

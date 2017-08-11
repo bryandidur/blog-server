@@ -49,7 +49,7 @@ class UserController extends Controller
     {
         $user = $this->userRepository->create($request->all());
 
-        return response($user, Response::HTTP_CREATED);
+        return response()->json($user, Response::HTTP_CREATED);
     }
 
     /**
@@ -91,7 +91,7 @@ class UserController extends Controller
     {
         $user = $this->userRepository->find($id);
 
-        $userRepository->delete($user);
+        $this->userRepository->delete($user);
 
         return response()->json(null, Response::HTTP_OK);
     }

@@ -63,6 +63,27 @@ class FileRepository extends AbstractRepository implements FileRepositoryInterfa
 
         DB::table($this->factory()->getTable())->insert($files->toArray());
 
+        return $this->mergeIdsToFilesData($files, $timestamp);
+    }
+
+    /**
+     * Merge id key to the files data.
+     *
+     * @param  \Illuminate\Support\Collection $files
+     * @param  string  $timestamp
+     * @return \Illuminate\Support\Collection
+     */
+    private function mergeIdsToFilesData(Collection $files, $timestamp)
+    {
+        // Get newly stored records by its timestamps
+        $storedFiles = $this->newQuery()->where('created_at', $timestamp)->get();
+
+        $files->transform(function ($file, $key) use ($storedFiles) {
+            return $file->merge([
+                'id' => $storedFiles[$key]->id,
+            ]);
+        });
+
         return $files;
     }
 

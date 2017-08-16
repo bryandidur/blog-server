@@ -22,35 +22,35 @@ class ProcessFileJob implements ShouldQueue
     public $tries = 3;
 
     /**
-     * Data to be proccessed
+     * File data to be proccessed.
      *
-     * @var \Illuminate\Support\Collection
+     * @var array
      */
-    public $files;
+    public $fileData;
 
     /**
-     * Directory where files will be stored.
+     * Directory where file will be stored.
      *
      * @var string
      */
-    public $filesDirectory = 'public';
+    public $fileDirectory = 'public';
 
     /**
-     * Files visibility.
+     * File visibility.
      *
      * @var string
      */
-    public $filesVisibility = 'public';
+    public $fileVisibility = 'public';
 
     /**
      * Create a new job instance.
      *
-     * @param  \Illuminate\Support\Collection  $files
+     * @param  array  $file
      * @return void
      */
-    public function __construct(Collection $files)
+    public function __construct(array $fileData)
     {
-        $this->files = $files;
+        $this->fileData = $fileData;
     }
 
     /**
@@ -60,21 +60,28 @@ class ProcessFileJob implements ShouldQueue
      */
     public function handle(FileRepository $fileRepository)
     {
-        $this->files->transform(function ($file, $key) {
-            $path = $this->filesDirectory . '/' . str_random(30) . '.' . $file['extension'];
+        $data = [
+            'user_id'    => $this->fileData['user_id'],
+            'disk'       => $this->fileData['disk'],
+            'name'       => $this->fileData['name'],
+            'mime'       => $this->fileData['mime'],
+            'extension'  => $this->fileData['extension'],
+            'path'       => $this->fileDirectory . '/' . str_random(30) . '.' . $this->fileData['extension'],
+        ];
 
-            \Storage::disk($file['disk'])->put($path, base64_decode($file['contents']), $this->filesVisibility);
+        \Storage::disk($data['disk'])->put($data['path'], base64_decode($this->fileData['contents']), $this->fileVisibility);
 
-            return [
-                'user_id'    => $file['user_id'],
-                'disk'       => $file['disk'],
-                'name'       => $file['name'],
-                'mime'       => $file['mime'],
-                'extension'  => $file['extension'],
-                'path'       => $path,
-            ];
-        });
+        return $fileRepository->create($data);
+    }
 
-        return $fileRepository->bulkCreate($this->files->toArray());
+    /**
+     * The job failed to process.
+     *
+     * @param  Exception  $exception
+     * @return void
+     */
+    public function failed(\Exception $exception)
+    {
+        //
     }
 }

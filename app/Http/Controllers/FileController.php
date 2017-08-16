@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Storage;
+use App\Jobs\ProcessFileJob;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Requests\FileRequest;
@@ -53,21 +54,20 @@ class FileController extends Controller
      */
     public function store(FileRequest $request)
     {
-        $disk = $request->get('disk');
         $files = collect($request->file('files'));
 
-        $files->transform(function ($file, $key) use ($disk) {
-            return [
+        $files->map(function ($file, $key) use ($request) {
+            $eventJob = new ProcessFileJob([
                 'user_id'   => auth()->user()->id,
-                'disk'      => $disk,
+                'disk'      => $request->get('disk'),
                 'name'      => strchr($file->getClientOriginalName(), '.', true),
                 'mime'      => $file->getMimetype(),
                 'extension' => $file->getClientOriginalExtension(),
                 'contents'  => base64_encode(file_get_contents($file->getPathname())),
-            ];
-        });
+            ]);
 
-        dispatch(new \App\Jobs\ProcessFileJob($files));
+            dispatch($eventJob->onQueue('uploads'));
+        });
 
         return response()->json(['success' => true], Response::HTTP_ACCEPTED);
     }

@@ -45,25 +45,19 @@ class FileRepository extends AbstractRepository implements FileRepositoryInterfa
      */
     public function bulkCreate(array $data)
     {
-        $files = collect($data['files']);
+        $data = collect($data);
         $timestamp = date('Y-m-d H:i:s');
 
-        $files->transform(function ($file, $key) use ($data, $timestamp) {
-            return collect()->merge([
-                'user_id'    => auth()->user()->id,
-                'disk'       => $data['disk'],
-                'name'       => strchr($file->getClientOriginalName(), '.', true),
-                'mime'       => $file->getMimetype(),
-                'extension'  => $file->getClientOriginalExtension(),
-                'path'       => $file->storePubliclyAs('public', str_random(30) . '.' . $file->getClientOriginalExtension(), $data['disk']),
+        $data->transform(function ($item, $key) use($timestamp) {
+            return collect($item)->merge([
                 'created_at' => $timestamp,
                 'updated_at' => $timestamp,
             ]);
         });
 
-        DB::table($this->factory()->getTable())->insert($files->toArray());
+        DB::table($this->factory()->getTable())->insert($data->toArray());
 
-        return $this->mergeIdsToFilesData($files, $timestamp);
+        return $this->mergeIdsToFilesData($data, $timestamp);
     }
 
     /**

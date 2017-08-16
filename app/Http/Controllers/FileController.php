@@ -53,9 +53,23 @@ class FileController extends Controller
      */
     public function store(FileRequest $request)
     {
-        $files = $this->fileRepository->bulkCreate($request->all());
+        $disk = $request->get('disk');
+        $files = collect($request->file('files'));
 
-        return response($files, Response::HTTP_CREATED);
+        $files->transform(function ($file, $key) use ($disk) {
+            return [
+                'user_id'   => auth()->user()->id,
+                'disk'      => $disk,
+                'name'      => strchr($file->getClientOriginalName(), '.', true),
+                'mime'      => $file->getMimetype(),
+                'extension' => $file->getClientOriginalExtension(),
+                'contents'  => base64_encode(file_get_contents($file->getPathname())),
+            ];
+        });
+
+        dispatch(new \App\Jobs\ProcessFileJob($files));
+
+        return response()->json(['success' => true], Response::HTTP_ACCEPTED);
     }
 
     /**

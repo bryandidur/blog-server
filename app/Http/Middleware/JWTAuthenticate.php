@@ -18,13 +18,13 @@ class JWTAuthenticate
     public function handle($request, Closure $next)
     {
         if ( ! $token = JWTAuth::setRequest($request)->getToken() ) {
-            return response(['message' => trans('auth.token_invalid')], Response::HTTP_BAD_REQUEST);
+            return response(['message' => trans('auth.token_invalid')], Response::HTTP_UNAUTHORIZED);
         }
 
         try {
             $user = JWTAuth::authenticate($token);
         } catch (\Exception $e) {
-            return response(['message' => trans('auth.token_invalid')], Response::HTTP_BAD_REQUEST);
+            return response(['message' => trans('auth.token_invalid')], Response::HTTP_UNAUTHORIZED);
         }
 
         if ( ! $user ) {

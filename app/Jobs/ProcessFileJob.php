@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\ProcessFileEvent;
 use App\Repositories\FileRepository;
 use Illuminate\Support\Collection;
 use Illuminate\Bus\Queueable;
@@ -71,6 +72,8 @@ class ProcessFileJob implements ShouldQueue
 
         \Storage::disk($data['disk'])->put($data['path'], base64_decode($this->fileData['contents']), $this->fileVisibility);
 
+        event(new ProcessFileEvent('O arquivo ' . $data['name'] . ' foi upado com sucesso!', 'success'));
+
         return $fileRepository->create($data);
     }
 
@@ -82,6 +85,6 @@ class ProcessFileJob implements ShouldQueue
      */
     public function failed(\Exception $exception)
     {
-        //
+        event(new ProcessFileEvent('Não foi possível fazer o upload de alguns arquivos!', 'error'));
     }
 }

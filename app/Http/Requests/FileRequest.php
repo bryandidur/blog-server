@@ -30,7 +30,7 @@ class FileRequest extends FormRequest
             // Rules for store
             $rules = [
                 'disk'    => 'required|in:local,s3',
-                'files'   => 'required',
+                'files'   => 'required|array',
                 'files.*' => 'required|mimes:jpeg,png,gif,bmp,svg,mp3,mp4,txt,pdf,docx|max:4000',
             ];
         }

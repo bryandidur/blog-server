@@ -23,7 +23,7 @@ class JWTRefreshToken
         try {
             $refreshedToken = JWTAuth::refresh($token);
         } catch (\Exception $e) {
-            return response()->json(['message' => trans('auth.token_invalid')], Response::HTTP_BAD_REQUEST);
+            return response()->json(['message' => trans('auth.token_invalid')], Response::HTTP_UNAUTHORIZED);
         }
 
         // send the refreshed token back to the client

@@ -39,6 +39,7 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
             'bindings',
+            \Barryvdh\Cors\HandleCors::class,
         ],
     ];
 
@@ -58,6 +59,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'always.json' => \App\Http\Middleware\AlwaysExpectsJson::class,
         'jwt.auth' => \App\Http\Middleware\JWTAuthenticate::class,
-        'jwt.refresh' => \App\Http\Middleware\JWTRefreshToken::class,
+        // 'jwt.refresh' => \App\Http\Middleware\JWTRefreshToken::class,
+        'jwt.refresh' => \Tymon\JWTAuth\Middleware\RefreshToken::class,
     ];
 }

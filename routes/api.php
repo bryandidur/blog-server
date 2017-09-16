@@ -23,7 +23,7 @@ Route::group(['prefix' => 'auth', 'namespace' => 'JWTAuth'], function () {
 |
 */
 
-Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth', 'always.json']], function () {
+Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth', 'jwt.refresh', 'always.json']], function () {
 
     // Users
     Route::group(['prefix' => 'users'], function () {

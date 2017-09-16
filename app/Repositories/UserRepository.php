@@ -14,18 +14,56 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
     protected $model = \App\User::class;
 
     /**
+     * Delete an user.
+     *
+     * @param  object $user
+     * @return bool
+     */
+    public function delete($user)
+    {
+        $this->deleteAllRelationships($user);
+
+        return $user->delete();
+    }
+
+    /**
+     * Delete all user relationships.
+     *
+     * @param  object $user
+     * @return void
+     */
+    public function deleteAllRelationships($user)
+    {
+        if( $user->files ) {
+            $user->files()->delete();
+        }
+
+        if( $user->tags ) {
+            $user->tags()->delete();
+        }
+
+        if( $user->categories ) {
+            $user->categories()->delete();
+        }
+
+        if( $user->articles ) {
+            $user->articles()->delete();
+        }
+    }
+
+    /**
      * Fill an user model and encrypt its password.
      *
-     * @param  object $model
+     * @param  object $user
      * @param  array  $data
      * @return void
      */
-    public function fill($model, array $data = [])
+    public function fill($user, array $data = [])
     {
         if ( isset($data['password']) ) {
             $data['password'] = bcrypt($data['password']);
         }
 
-        $model->fill($data);
+        $user->fill($data);
     }
 }

@@ -92,7 +92,7 @@ class FileRepository extends AbstractRepository implements FileRepositoryInterfa
     {
         $this->fill($model, [
             'name' => $data['name'],
-            'description' => $data['description'],
+            'description' => isset($data['description']) ? $data['description'] : null,
         ]);
 
         return $this->save($model);

@@ -39,7 +39,12 @@ class FileController extends Controller
         $files = $this->fileRepository->all()->sortByDesc('id');
 
         $files->transform(function ($file, $key) {
-            $file->url = Storage::disk($file->disk)->url($file->path);
+            if ( $file->disk == 'local' ) {
+                $file->url = url(Storage::disk($file->disk)->url($file->path));
+            } else {
+                $file->url = Storage::disk($file->disk)->url($file->path);
+            }
+
             return $file;
         });
 

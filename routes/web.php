@@ -2,12 +2,19 @@
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Public Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
 |
 */
 
+// Home
+Route::get('/', 'HomeController@index')->name('home.index');
+
+// Tags
+Route::get('/tag/{slug}', 'TagController@show')->name('tags.show');
+
+// Categories
+Route::get('/category/{slug}', 'CategoryController@show')->name('categories.show');
+
+// Articles
+Route::get('/article/{slug}', 'ArticleController@show')->name('articles.show');

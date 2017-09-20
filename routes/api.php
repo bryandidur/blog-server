@@ -30,7 +30,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth', 'jwt.refresh', '
         Route::get('', 'UserController@index');
         Route::post('', 'UserController@store');
 
-        Route::get('/{id}', 'UserController@show');
+        Route::get('/{id}', 'UserController@edit');
         Route::put('/{id}', 'UserController@update');
 
         Route::delete('/{id}', 'UserController@destroy');
@@ -41,7 +41,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth', 'jwt.refresh', '
         Route::get('', 'TagController@index');
         Route::post('', 'TagController@store');
 
-        Route::get('/{id}', 'TagController@show');
+        Route::get('/{id}', 'TagController@edit');
         Route::put('/{id}', 'TagController@update');
 
         Route::delete('/{id}', 'TagController@destroy');
@@ -52,7 +52,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth', 'jwt.refresh', '
         Route::get('', 'CategoryController@index');
         Route::post('', 'CategoryController@store');
 
-        Route::get('/{id}', 'CategoryController@show');
+        Route::get('/{id}', 'CategoryController@edit');
         Route::put('/{id}', 'CategoryController@update');
 
         Route::delete('/{id}', 'CategoryController@destroy');
@@ -63,7 +63,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth', 'jwt.refresh', '
         Route::get('', 'ArticleController@index');
         Route::post('', 'ArticleController@store');
 
-        Route::get('/{id}', 'ArticleController@show');
+        Route::get('/{id}', 'ArticleController@edit');
         Route::put('/{id}', 'ArticleController@update');
 
         Route::delete('/{id}', 'ArticleController@destroy');
@@ -74,7 +74,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth', 'jwt.refresh', '
         Route::get('', 'FileController@index');
         Route::post('', 'FileController@store')->name('files.store');
 
-        Route::get('/{id}', 'FileController@show');
+        Route::get('/{id}', 'FileController@edit');
         Route::put('/{id}', 'FileController@update')->name('files.update');
 
         Route::delete('/{id}', 'FileController@destroy');

@@ -14,6 +14,20 @@ class TagRepository extends AbstractRepository implements TagRepositoryInterface
     protected $model = \App\Tag::class;
 
     /**
+     * Find records by slug and optionally with its relationships.
+     *
+     * @param  string  $slug
+     * @param  array   $relations
+     * @param  array   $columns
+     * @param  boolean $fail
+     * @return object  Model class and its relationships classes
+     */
+    public function findBySlug($slug, $relations = [], $columns = ['*'], $fail = true)
+    {
+        return $this->findByColumn('slug', $slug, $relations, $columns, $fail);
+    }
+
+    /**
      * Fill an tag model.
      *
      * @param  object $model

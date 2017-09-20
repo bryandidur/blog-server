@@ -28,7 +28,7 @@ class UserController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the user.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -40,7 +40,7 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created user in storage.
      *
      * @param  App\Http\Requests\UserRequest  $request
      * @return \Illuminate\Http\JsonResponse
@@ -53,12 +53,12 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified user for update.
      *
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function edit($id)
     {
         $user = $this->userRepository->find($id);
 
@@ -66,7 +66,7 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified user in storage.
      *
      * @param  App\Http\Requests\UserRequest  $request
      * @param  int  $id
@@ -82,7 +82,7 @@ class UserController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified user from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse

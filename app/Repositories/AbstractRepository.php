@@ -49,6 +49,26 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
     }
 
     /**
+     * Find records by an specific column and
+     * optionally with its relationships.
+     *
+     * @param  string  $column
+     * @param  mixed   $value
+     * @param  array   $relations
+     * @param  array   $columns
+     * @param  boolean $fail
+     * @return object Model class(es) and its relationships classes
+     */
+    public function findByColumn($column, $value, $relations = [], $columns = ['*'], $fail = true)
+    {
+        if ( $fail ) {
+            return $this->newQuery()->with($relations)->where($column, $value)->firstOrFail($columns);
+        }
+
+        return $this->newQuery()->with($relations)->where($column, $value)->first($columns);
+    }
+
+    /**
      * Store a new record.
      *
      * @param  array  $data

@@ -55,10 +55,24 @@ class CategoryController extends Controller
     /**
      * Display the specified category.
      *
+     * @param  int  $slug
+     * @return \Illuminate\Http\Response
+     */
+    public function show($slug)
+    {
+        $category = $this->categoryRepository->findBySlug($slug, ['articles']);
+        $articles = $category->articles()->paginate(5);
+
+        return view('pages.category')->with(compact('category', 'articles'));
+    }
+
+    /**
+     * Display the specified category for update.
+     *
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function edit($id)
     {
         $category = $this->categoryRepository->find($id);
 

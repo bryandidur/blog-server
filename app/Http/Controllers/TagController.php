@@ -55,10 +55,24 @@ class TagController extends Controller
     /**
      * Display the specified tag.
      *
+     * @param  int  $slug
+     * @return \Illuminate\Http\Response
+     */
+    public function show($slug)
+    {
+        $tag = $this->tagRepository->findBySlug($slug, ['articles']);
+        $articles = $tag->articles()->paginate(5);
+
+        return view('pages.tag')->with(compact('tag', 'articles'));
+    }
+
+    /**
+     * Display the specified tag for update.
+     *
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function edit($id)
     {
         $tag = $this->tagRepository->find($id);
 

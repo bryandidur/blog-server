@@ -55,10 +55,23 @@ class ArticleController extends Controller
     /**
      * Display the specified article.
      *
+     * @param  int  $slug
+     * @return \Illuminate\Http\Response
+     */
+    public function show($slug)
+    {
+        $article = $this->articleRepository->findBySlug($slug, ['tags', 'categories']);
+
+        return view('pages.article')->with(compact('article'));
+    }
+
+    /**
+     * Display the specified article for update.
+     *
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function edit($id)
     {
         $article = $this->articleRepository->findWith($id, ['tags', 'categories']);
 

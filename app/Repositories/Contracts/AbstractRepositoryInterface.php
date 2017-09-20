@@ -26,6 +26,19 @@ interface AbstractRepositoryInterface
     public function find($id, $fail = true, $columns = ['*']);
 
     /**
+     * Find records by an specific column and
+     * optionally with its relationships.
+     *
+     * @param  string  $column
+     * @param  mixed   $value
+     * @param  array   $relations
+     * @param  array   $columns
+     * @param  boolean $fail
+     * @return object Model class(es) and its relationships classes
+     */
+    public function findByColumn($column, $value, $relations = [], $columns = ['*'], $fail = true);
+
+    /**
      * Store a new record.
      *
      * @param  array  $data

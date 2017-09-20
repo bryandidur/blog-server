@@ -78,12 +78,12 @@ class FileController extends Controller
     }
 
     /**
-     * Display the specified file.
+     * Display the specified file for update.
      *
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function edit($id)
     {
         $file = $this->fileRepository->find($id);
         $file->url = Storage::disk($file->disk)->url($file->path);

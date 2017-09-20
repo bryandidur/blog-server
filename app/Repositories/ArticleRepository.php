@@ -14,6 +14,20 @@ class ArticleRepository extends AbstractRepository implements ArticleRepositoryI
     protected $model = \App\Article::class;
 
     /**
+     * Find records by slug and optionally with its relationships.
+     *
+     * @param  string  $slug
+     * @param  array   $relations
+     * @param  array   $columns
+     * @param  boolean $fail
+     * @return object  Model class and its relationships classes
+     */
+    public function findBySlug($slug, $relations = [], $columns = ['*'], $fail = true)
+    {
+        return $this->findByColumn('slug', $slug, $relations, $columns, $fail);
+    }
+
+    /**
      * Find an specific record by its primary key and return it and its relationships.
      *
      * @param  int          $id
